@@ -1,0 +1,85 @@
+import random
+
+class WordSearch:
+  def __init__(self, width, height, words):
+    self.width = width
+    self.height = height
+    self.words = words
+    self.grid = []
+
+  def generate_grid(self):
+    for i in range(self.height):
+      row = []
+      for j in range(self.width):
+        row.append(random.choice(list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")))
+      self.grid.append(row)
+
+  def print_grid(self):
+    for row in self.grid:
+      print(" ".join(row))
+
+  def place_words(self):
+    for word in self.words:
+      placed = False
+      while not placed:
+        direction = random.choice([0, 1, 2, 3, 4, 5, 6, 7])
+        i = random.randint(0, self.height - 1)
+        j = random.randint(0, self.width - 1)
+        if self.can_place_word(word, i, j, direction):
+          self.place_word(word, i, j, direction)
+          placed = True
+
+  def can_place_word(self, word, i, j, direction):
+    if direction == 0:  # horizontal
+      for k in range(len(word)):
+        if j + k >= self.width or self.grid[i][j + k] != word[k]:
+          return False
+    elif direction == 1:  # vertical
+      for k in range(len(word)):
+        if i + k >= self.height or self.grid[i + k][j] != word[k]:
+          return False
+    elif direction == 2:  # diagonal down-right
+      for k in range(len(word)):
+        if i + k >= self.height or j + k >= self.width or self.grid[i + k][j + k] != word[k]:
+          return False
+    elif direction == 3:  # diagonal up-right
+      for k in range(len(word)):
+        if i - k < 0 or j + k >= self.width or self.grid[i - k][j + k] != word[k]:
+          return False
+    elif direction == 4:  # diagonal down-left
+      for k in range(len(word)):
+        if i + k >= self.height or j - k < 0 or self.grid[i + k][j - k] != word[k]:
+          return False
+    elif direction == 5:  # diagonal up-left
+      for k in range(len(word)):
+        if i - k < 0 or j - k < 0 or self.grid[i - k][j - k] != word[k]:
+          return False
+    elif direction == 6:  # reverse horizontal
+      for k in range(len(word)):
+        if j - k < 0 or self.grid[i][j - k] != word[k]:
+          return False
+    elif direction == 7:  # reverse vertical
+      for k in range(len(word)):
+        if i - k < 0 or self.grid[i - k][j] != word[k]:
+          return False
+    return True
+
+  def place_word(self, word, i, j, direction):
+    if direction == 0:  # horizontal
+      for k in range(len(word)):
+        self.grid[i][j + k] = word[k]
+    elif direction == 1:  # vertical
+      for k in range(len(word)):
+        self.grid[i + k][j] = word[k]
+    elif direction == 2:  # diagonal down-right
+      for k in range(len(word)):
+        self.grid[i + k][j + k] = word[k]
+    elif direction == 3:  # diagonal up-right
+      for k in range(len(word)):
+        self.grid[i - k][j + k] = word[k]
+    elif direction == 4:  # diagonal down-left
+      for k in range(len(word)):
+        self.grid[i + k][j - k] = word[k]
+    elif direction == 5:  # diagonal up-left
+      for k in range(len(word)):
+        self.grid[i - k
